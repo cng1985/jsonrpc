@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import org.json.rpc.client.JsonRpcClientTransport;
-import org.json.rpc.commons.JsonRpcClientException;
+import com.ada.client.JsonRpcClientTransport;
+import com.ada.commons.JsonRpcClientException;
 
 public class HttpJsonRpcClientTransportOld   implements JsonRpcClientTransport{
 	   private URL url;

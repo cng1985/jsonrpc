@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.json.other.client;
+package com.ada.client;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,17 +29,34 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import com.ada.client.JsonRpcClientTransport;
 import com.ada.commons.JsonRpcClientException;
 
-public class AdaHttpJsonRpcClientTransport implements JsonRpcClientTransport {
+public class HttpJsonRpcClientTransport implements JsonRpcClientTransport {
 
 	private URL url;
 	private final Map<String, String> headers;
+	private int connectTimeout;
+	private int readTimeout;
 
-	public AdaHttpJsonRpcClientTransport(URL url) {
+	/**
+	 * 
+	 * @param url
+	 * @param connectTimeout 连接超时设置
+	 * @param readTimeout 读取数据超时设置
+	 */
+	public HttpJsonRpcClientTransport(URL url, int connectTimeout,
+			int readTimeout) {
+		super();
+		this.connectTimeout = connectTimeout;
+		this.readTimeout = readTimeout;
+		this.headers = new HashMap<String, String>();
+	}
+
+	public HttpJsonRpcClientTransport(URL url) {
 		this.url = url;
 		this.headers = new HashMap<String, String>();
+		connectTimeout = 5000;
+		readTimeout = 7500;
 	}
 
 	public final void setHeader(String key, String value) {
@@ -61,9 +78,9 @@ public class AdaHttpJsonRpcClientTransport implements JsonRpcClientTransport {
 			}
 		}
 		connection.addRequestProperty("Accept-Encoding", "gzip");
-		connection.setConnectTimeout(3000);
+		connection.setConnectTimeout(connectTimeout);
 		connection.setRequestMethod("POST");
-		connection.setReadTimeout(4500);
+		connection.setReadTimeout(readTimeout);
 		connection.setDoOutput(true);
 		connection.connect();
 		/**
@@ -77,12 +94,9 @@ public class AdaHttpJsonRpcClientTransport implements JsonRpcClientTransport {
 			out.close();
 			int statusCode = connection.getResponseCode();
 			if (statusCode != HttpURLConnection.HTTP_OK) {
-				// throw new JsonRpcClientException(
-				// "unexpected status code returned : " + statusCode);
-				return null;
+				throw new JsonRpcClientException(
+						"unexpected status code returned : " + statusCode);
 			}
-		} catch (Exception e) {
-			return null;
 		} finally {
 			if (out != null) {
 				out.close();
@@ -103,8 +117,6 @@ public class AdaHttpJsonRpcClientTransport implements JsonRpcClientTransport {
 			in = new BufferedInputStream(in);
 			ByteBuffer byteData = readToByteBuffer(in);
 			body = Charset.forName("UTF-8").decode(byteData).toString();
-		} catch (Exception e) {
-			return null;
 		} finally {
 			if (in != null) {
 				in.close();
@@ -127,7 +139,6 @@ public class AdaHttpJsonRpcClientTransport implements JsonRpcClientTransport {
 		ByteBuffer byteData = ByteBuffer.wrap(outStream.toByteArray());
 		return byteData;
 	}
-
 	private static final int bufferSize = 0x20000; // ~130K.
 
 }
