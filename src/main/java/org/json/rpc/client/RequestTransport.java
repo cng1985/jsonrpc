@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.json.other.client;
+package org.json.rpc.client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,18 +28,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.codec.Base64Utils;
-import org.json.rpc.client.JsonRpcClientTransport;
-
-public class Base64HttpJsonRpcClientTransport2 implements JsonRpcClientTransport {
+public class RequestTransport implements JsonRpcClientTransport {
 
 	private URL url;
 	private final Map<String, String> headers;
 
-	public Base64HttpJsonRpcClientTransport2(URL url) {
+	public RequestTransport(URL url) {
 		this.url = url;
 		this.headers = new HashMap<String, String>();
+		this.readTimeout = 9000;
+		this.connectTimeout = 6000;
 	}
+
+	public RequestTransport(URL url, int connectTimeout, int readTimeout) {
+		super();
+		this.url = url;
+		this.connectTimeout = connectTimeout;
+		this.readTimeout = readTimeout;
+		this.headers = new HashMap<String, String>();
+	}
+
+	private int connectTimeout;
+	private int readTimeout;
 
 	public final void setHeader(String key, String value) {
 		this.headers.put(key, value);
@@ -54,7 +64,6 @@ public class Base64HttpJsonRpcClientTransport2 implements JsonRpcClientTransport
 
 	private String post(URL url, Map<String, String> headers, String data)
 			throws IOException {
-		String tdata = Base64Utils.encode(data);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		if (headers != null) {
 			for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -63,9 +72,9 @@ public class Base64HttpJsonRpcClientTransport2 implements JsonRpcClientTransport
 		}
 
 		connection.addRequestProperty("Accept-Encoding", "gzip");
-		connection.setConnectTimeout(6000);
+		connection.setConnectTimeout(connectTimeout);
 		connection.setRequestMethod("POST");
-		connection.setReadTimeout(9000);
+		connection.setReadTimeout(readTimeout);
 		connection.setDoOutput(true);
 		connection.connect();
 		/**
@@ -75,7 +84,7 @@ public class Base64HttpJsonRpcClientTransport2 implements JsonRpcClientTransport
 		try {
 			out = connection.getOutputStream();
 			OutputStreamWriter w = new OutputStreamWriter(out);
-			w.write("body=" + tdata);
+			w.write("body=" + data);
 			w.close();
 			int statusCode = connection.getResponseCode();
 			if (statusCode != HttpURLConnection.HTTP_OK) {
@@ -84,6 +93,7 @@ public class Base64HttpJsonRpcClientTransport2 implements JsonRpcClientTransport
 				return null;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		} finally {
 			if (out != null) {
@@ -114,7 +124,6 @@ public class Base64HttpJsonRpcClientTransport2 implements JsonRpcClientTransport
 			}
 		}
 		String body = bos.toString();
-		body = Base64Utils.decode(body);
 		return body;
 	}
 

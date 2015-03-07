@@ -26,20 +26,10 @@
 			<artifactId>gson</artifactId>
 			<version>2.3</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+		</dependency>
 	</dependencies>
-	<plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<version>3.1</version>
-			<configuration>
-				<encoding>UTF-8</encoding>
-				<source>1.6</source>
-				<target>1.6</target>
-				<meminitial>512m</meminitial>
-				<maxmem>1024m</maxmem>
-				<fork>true</fork>
-			</configuration>
-		</plugin>
-	</plugins>
 </project>

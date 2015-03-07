@@ -101,18 +101,14 @@ public void setShowlog(boolean showlog) {
 				locked = true;
 			}
 		}
-
 		String methodName = null;
 		String key = null;
 		JsonArray params = null;
-
 		JsonObject resp = new JsonObject();
 		resp.addProperty("jsonrpc", "2.0");
-
 		String errorMessage = null;
 		Integer errorCode = null;
 		String errorData = null;
-
 		JsonObject req = null;
 		try {
 			String requestData = transport.readRequest();
@@ -126,7 +122,6 @@ public void setShowlog(boolean showlog) {
 			sendError(transport, resp, errorCode, errorMessage, errorData);
 			return;
 		}
-
 		try {
 			assert req != null;
 			resp.add("id", req.get("id"));
@@ -149,7 +144,7 @@ public void setShowlog(boolean showlog) {
 		}
 
 		try {
-			if (key != null&&key.length()>32) {
+			if (key != null&&key.length()>30) {
 				if (rpcCache != null) {
 					JsonElement result = rpcCache.get(key);
 					if (result == null) {
