@@ -7,10 +7,11 @@ jsonrpc
 #maven使用#
 
 
-<dependency>
+    <dependency>
     <groupId>com.openyelp</groupId>
     <artifactId>jsonrpc</artifactId>
     <version>1.02</version>
-</dependency>
+    </dependency>
+
 
 
