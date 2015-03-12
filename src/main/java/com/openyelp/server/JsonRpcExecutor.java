@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -65,14 +66,16 @@ public final class JsonRpcExecutor implements RpcIntroSpection {
 		this.handlers = new HashMap<String, HandleEntry<?>>();
 		addHandler("system", this, RpcIntroSpection.class);
 	}
-  private boolean showlog=true;
-	public boolean isShowlog() {
-	return showlog;
-}
 
-public void setShowlog(boolean showlog) {
-	this.showlog = showlog;
-}
+	private boolean showlog = true;
+
+	public boolean isShowlog() {
+		return showlog;
+	}
+
+	public void setShowlog(boolean showlog) {
+		this.showlog = showlog;
+	}
 
 	public boolean isLocked() {
 		return locked;
@@ -143,15 +146,15 @@ public void setShowlog(boolean showlog) {
 		}
 
 		try {
-			if (key != null&&key.length()>30) {
+			if (key != null && key.length() > 30) {
 				if (rpcCache != null) {
 					JsonElement result = rpcCache.get(key);
 					if (result == null) {
 						result = executeMethod(methodName, params);
 						rpcCache.put(key, result);
 					} else {
-						if(showlog){
-							System.out.println("获取老数据,key:"+key);
+						if (showlog) {
+							System.out.println("获取老数据,key:" + key);
 						}
 						cachsize++;
 					}
@@ -263,8 +266,10 @@ public void setShowlog(boolean showlog) {
 
 			Object result = executableMethod.invoke(handleEntry.getHandler(),
 					getParameters(executableMethod, params));
-
-			return new Gson().toJsonTree(result);
+			return new GsonBuilder()
+					.addSerializationExclusionStrategy(
+							new NoGsonExclusionStrategy()).create()
+					.toJsonTree(result);
 		} catch (Throwable t) {
 			if (t instanceof InvocationTargetException) {
 				t = ((InvocationTargetException) t).getTargetException();
