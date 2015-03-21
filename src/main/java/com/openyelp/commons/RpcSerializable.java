@@ -21,7 +21,7 @@ import java.io.Serializable;
  * @author Administrator
  *
  */
-public class RpcSerializable implements Serializable {
+public abstract class RpcSerializable implements Serializable {
 
 	/**
 	 * 服务器返回信息.可以用改标记服务器的运行情况,比如为0表示服务器处理成功,为-1表示处理失败

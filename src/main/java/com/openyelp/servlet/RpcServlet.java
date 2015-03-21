@@ -37,12 +37,17 @@ public abstract class RpcServlet extends HttpServlet {
 		for (String key : sets) {
 			Object o = ms.get(key);
 			Class[] classs = o.getClass().getInterfaces();
-			for (Class class1 : classs) {
-				Annotation xx =	class1.getAnnotation(RestFul.class);
+			for (Class apiclass : classs) {
+				Annotation xx =	apiclass.getAnnotation(RestFul.class);
 				if(xx instanceof RestFul){
 					RestFul xxx = (RestFul) xx;
 					String apiname = xxx.value();
-					executor.addHandler(apiname, o, xxx.api());
+					if(apiname==null){
+						apiname=apiclass.getSimpleName();
+						executor.addHandler(apiname, o, apiclass);
+					}else{
+						executor.addHandler(apiname, o, xxx.api());
+					}
 				}
 		
 			}

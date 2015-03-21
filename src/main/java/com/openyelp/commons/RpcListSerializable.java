@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public class RpcListRpcSerializable<T> extends RpcSerializable {
+public abstract class RpcListSerializable<T> extends RpcSerializable {
 
 	private List<T> datas;
 

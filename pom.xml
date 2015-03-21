@@ -4,7 +4,7 @@
 
 	<groupId>com.openyelp</groupId>
 	<artifactId>jsonrpc</artifactId>
-	<version>1.03</version>
+	<version>1.04</version>
 	<packaging>jar</packaging>
 
 	<name>jsonrpc</name>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.3</version>
+			<version>2.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
