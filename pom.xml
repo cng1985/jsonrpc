@@ -4,7 +4,7 @@
 
 	<groupId>com.openyelp</groupId>
 	<artifactId>jsonrpc</artifactId>
-	<version>1.04</version>
+	<version>1.05</version>
 	<packaging>jar</packaging>
 
 	<name>jsonrpc</name>

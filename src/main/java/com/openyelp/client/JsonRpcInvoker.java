@@ -32,6 +32,7 @@ import com.openyelp.cache.RpcStringCache;
 import com.openyelp.commons.GsonTypeChecker;
 import com.openyelp.commons.TypeChecker;
 import com.openyelp.commons.Utils;
+import com.openyelp.gson.GsonFactory;
 
 public final class JsonRpcInvoker {
 
@@ -79,7 +80,7 @@ public final class JsonRpcInvoker {
 				});
 	}
 
-	public int maxWorkTime = 3;
+	public int maxWorkTime = 1;
 
 	private Object invoke(String handleName, JsonRpcClientTransport transport,
 			Method method, Object[] args) throws Throwable {
@@ -140,7 +141,7 @@ public final class JsonRpcInvoker {
 
 	private Object work(String handleName, JsonRpcClientTransport transport,
 			Method method, Object[] args, String key) {
-		Gson gson = new Gson();
+		Gson gson = new GsonFactory().gson();
 		String cachekey = handleName + method.getName() + getKey(args);
 		String keyy = Utils.getMD5Str(cachekey);
 		String responseData = null;
@@ -199,7 +200,9 @@ public final class JsonRpcInvoker {
 		if (method.getReturnType() == void.class) {
 			return null;
 		}
-		return gson.fromJson(result.toString(), method.getReturnType());
+	Class<?> tt=	method.getReturnType();
+		//Type objectType = new TypeToken<tt>() {}.getType(); 
+		return gson.fromJson(result.toString(), tt);
 	}
 
 	private String c(String handleName, JsonRpcClientTransport transport,

@@ -16,11 +16,16 @@ public class RestFulClient {
 			transport = new HttpJsonRpcClientTransport(new URL(url));
 			JsonRpcInvoker invoker = new JsonRpcInvoker();
 			String apiname = ful.value();
-            if(apiname==null){
+            if(apiname==null||apiname.equals("")){
 				apiname=classc.getSimpleName();
     			result = (T) invoker.get(transport, apiname,classc);
             }else{
-    			result = (T) invoker.get(transport, ful.value(),ful.api());
+            	if (ful.api() == null || ful.api() == void.class) {
+					apiname = classc.getSimpleName();
+	    			result = (T) invoker.get(transport, apiname,classc);
+				} else {
+	    			result = (T) invoker.get(transport, ful.value(),ful.api());
+				}
 
             }
 		
