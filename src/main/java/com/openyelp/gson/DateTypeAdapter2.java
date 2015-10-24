@@ -88,7 +88,7 @@ public class DateTypeAdapter2 extends TypeAdapter<Date> {
 			out.nullValue();
 			return;
 		}
-		String dateFormatAsString = chineseFormat.format(value);
-		out.value(dateFormatAsString);
+	    String dateFormatAsString = enUsFormat.format(value);
+	    out.value(dateFormatAsString);
 	}
 }
