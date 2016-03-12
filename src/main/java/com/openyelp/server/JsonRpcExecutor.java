@@ -30,6 +30,9 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -46,6 +49,8 @@ import com.openyelp.commons.TypeChecker;
 
 public final class JsonRpcExecutor implements RpcIntroSpection {
 
+	private Logger logger = LoggerFactory.getLogger(JsonRpcExecutor.class);
+	
 	private static final Pattern METHOD_PATTERN = Pattern
 			.compile("([_a-zA-Z][_a-zA-Z0-9]*)\\.([_a-zA-Z][_a-zA-Z0-9]*)");
 
@@ -83,14 +88,13 @@ public final class JsonRpcExecutor implements RpcIntroSpection {
 
 	public <T> void addHandler(String name, T handler, Class<T>... classes) {
 		if (locked) {
-			throw new JsonRpcException(
-					"executor has been locked, can't add more handlers");
+			throw new JsonRpcException("executor has been locked, can't add more handlers");
 		}
 
 		synchronized (handlers) {
-			HandleEntry<T> handleEntry = new HandleEntry<T>(typeChecker,
-					handler, classes);
+			HandleEntry<T> handleEntry = new HandleEntry<T>(typeChecker, handler, classes);
 			if (this.handlers.containsKey(name)) {
+				logger.error("key:"+name);
 				throw new IllegalArgumentException("handler already exists");
 			}
 			this.handlers.put(name, handleEntry);
@@ -188,13 +192,12 @@ public final class JsonRpcExecutor implements RpcIntroSpection {
 		}
 	}
 
-	private void sendError(JsonRpcServerTransport transport, JsonObject resp,
-			JsonRpcRemoteException e) {
+	private void sendError(JsonRpcServerTransport transport, JsonObject resp, JsonRpcRemoteException e) {
 		sendError(transport, resp, e.getCode(), e.getMessage(), e.getData());
 	}
 
-	private void sendError(JsonRpcServerTransport transport, JsonObject resp,
-			Integer code, String message, String data) {
+	private void sendError(JsonRpcServerTransport transport, JsonObject resp, Integer code, String message,
+			String data) {
 		JsonObject error = new JsonObject();
 		if (code != null) {
 			error.addProperty("code", code);
@@ -226,14 +229,12 @@ public final class JsonRpcExecutor implements RpcIntroSpection {
 		return str.toString();
 	}
 
-	private JsonElement executeMethod(String methodName, JsonArray params)
-			throws Throwable {
+	private JsonElement executeMethod(String methodName, JsonArray params) throws Throwable {
 		try {
 			Matcher mat = METHOD_PATTERN.matcher(methodName);
 			if (!mat.find()) {
-				throw new JsonRpcRemoteException(
-						JsonRpcErrorCodes.INVALID_REQUEST_ERROR_CODE,
-						"invalid method name", null);
+				throw new JsonRpcRemoteException(JsonRpcErrorCodes.INVALID_REQUEST_ERROR_CODE, "invalid method name",
+						null);
 			}
 
 			String handleName = mat.group(1);
@@ -241,9 +242,8 @@ public final class JsonRpcExecutor implements RpcIntroSpection {
 
 			HandleEntry<?> handleEntry = handlers.get(handleName);
 			if (handleEntry == null) {
-				throw new JsonRpcRemoteException(
-						JsonRpcErrorCodes.METHOD_NOT_FOUND_ERROR_CODE,
-						"no such method exists", null);
+				throw new JsonRpcRemoteException(JsonRpcErrorCodes.METHOD_NOT_FOUND_ERROR_CODE, "no such method exists",
+						null);
 			}
 
 			Method executableMethod = null;
@@ -259,16 +259,12 @@ public final class JsonRpcExecutor implements RpcIntroSpection {
 			}
 
 			if (executableMethod == null) {
-				throw new JsonRpcRemoteException(
-						JsonRpcErrorCodes.METHOD_NOT_FOUND_ERROR_CODE,
-						"no such method exists", null);
+				throw new JsonRpcRemoteException(JsonRpcErrorCodes.METHOD_NOT_FOUND_ERROR_CODE, "no such method exists",
+						null);
 			}
 
-			Object result = executableMethod.invoke(handleEntry.getHandler(),
-					getParameters(executableMethod, params));
-			return new GsonBuilder()
-					.addSerializationExclusionStrategy(
-							new NoGsonExclusionStrategy()).create()
+			Object result = executableMethod.invoke(handleEntry.getHandler(), getParameters(executableMethod, params));
+			return new GsonBuilder().addSerializationExclusionStrategy(new NoGsonExclusionStrategy()).create()
 					.toJsonTree(result);
 		} catch (Throwable t) {
 			if (t instanceof InvocationTargetException) {
@@ -277,9 +273,7 @@ public final class JsonRpcExecutor implements RpcIntroSpection {
 			if (t instanceof JsonRpcRemoteException) {
 				throw (JsonRpcRemoteException) t;
 			}
-			throw new JsonRpcRemoteException(
-					JsonRpcErrorCodes.getServerError(0), t.getMessage(),
-					getStackTrace(t));
+			throw new JsonRpcRemoteException(JsonRpcErrorCodes.getServerError(0), t.getMessage(), getStackTrace(t));
 		}
 	}
 
