@@ -62,28 +62,22 @@ public final class JsonRpcInvoker {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T get(final JsonRpcClientTransport transport,
-			final String handle, final Class<T>... classes) {
+	public <T> T get(final JsonRpcClientTransport transport, final String handle, final Class<T>... classes) {
 		for (Class<T> clazz : classes) {
 			typeChecker.isValidInterface(clazz);
 		}
-		return (T) Proxy.newProxyInstance(
-				JsonRpcInvoker.class.getClassLoader(), classes,
-				new InvocationHandler() {
+		return (T) Proxy.newProxyInstance(JsonRpcInvoker.class.getClassLoader(), classes, new InvocationHandler() {
 
-					public Object invoke(final Object proxy,
-							final Method method, final Object[] args)
-							throws Throwable {
-						return JsonRpcInvoker.this.invoke(handle, transport,
-								method, args);
-					}
-				});
+			public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+				return JsonRpcInvoker.this.invoke(handle, transport, method, args);
+			}
+		});
 	}
 
 	public int maxWorkTime = 1;
 
-	private Object invoke(String handleName, JsonRpcClientTransport transport,
-			Method method, Object[] args) throws Throwable {
+	private Object invoke(String handleName, JsonRpcClientTransport transport, Method method, Object[] args)
+			throws Throwable {
 
 		String key = UUID.randomUUID().toString().toLowerCase();
 		int time = 0;
@@ -105,7 +99,15 @@ public final class JsonRpcInvoker {
 		StringBuffer buffer = new StringBuffer();
 		if (args != null) {
 			for (int i = 0; i < args.length; i++) {
-				buffer.append(args[i].toString() + "/");
+				Object o = args[i];
+				if (o != null) {
+					if (o instanceof Object) {
+						buffer.append(o.toString() + "/");
+					} else {
+						buffer.append(o + "/");
+					}
+
+				}
 			}
 		}
 		return buffer.toString();
@@ -123,8 +125,7 @@ public final class JsonRpcInvoker {
 		this.diskCache = diskCache;
 	}
 
-	public JsonRpcInvoker(TypeChecker typeChecker, int maxWorkTime,
-			RpcStringCache cache) {
+	public JsonRpcInvoker(TypeChecker typeChecker, int maxWorkTime, RpcStringCache cache) {
 		super();
 		this.typeChecker = typeChecker;
 		this.maxWorkTime = maxWorkTime;
@@ -139,8 +140,7 @@ public final class JsonRpcInvoker {
 		this.cache = cache;
 	}
 
-	private Object work(String handleName, JsonRpcClientTransport transport,
-			Method method, Object[] args, String key) {
+	private Object work(String handleName, JsonRpcClientTransport transport, Method method, Object[] args, String key) {
 		Gson gson = new GsonFactory().gson();
 		String cachekey = handleName + method.getName() + getKey(args);
 		String keyy = Utils.getMD5Str(cachekey);
@@ -155,17 +155,16 @@ public final class JsonRpcInvoker {
 			responseData = c(handleName, transport, method, args, key, gson);
 		}
 		if (responseData == null) {
-			if(diskCache!=null){
-				responseData=diskCache.get(keyy);
+			if (diskCache != null) {
+				responseData = diskCache.get(keyy);
 			}
 		}
 		if (responseData == null) {
 			return null;
 		}
-		
+
 		JsonParser parser = new JsonParser();
-		JsonObject resp = (JsonObject) parser.parse(new StringReader(
-				responseData));
+		JsonObject resp = (JsonObject) parser.parse(new StringReader(responseData));
 		// int sid = resp.get("id").getAsInt();
 		// if (id == sid) {
 		// } else {
@@ -182,10 +181,9 @@ public final class JsonRpcInvoker {
 			} else if (error.isJsonObject()) {
 				JsonObject o = error.getAsJsonObject();
 				Integer code = (o.has("code") ? o.get("code").getAsInt() : null);
-				String message = (o.has("message") ? o.get("message")
-						.getAsString() : null);
-				String data = (o.has("data") ? (o.get("data") instanceof JsonObject ? o
-						.get("data").toString() : o.get("data").getAsString())
+				String message = (o.has("message") ? o.get("message").getAsString() : null);
+				String data = (o.has("data")
+						? (o.get("data") instanceof JsonObject ? o.get("data").toString() : o.get("data").getAsString())
 						: null);
 				System.out.println(message + "<<>>>>>" + data);
 			} else {
@@ -193,20 +191,20 @@ public final class JsonRpcInvoker {
 			}
 			return null;
 		}
-		if(diskCache!=null){
+		if (diskCache != null) {
 			System.out.println("缓存数据");
-			diskCache.put(keyy,responseData);
+			diskCache.put(keyy, responseData);
 		}
 		if (method.getReturnType() == void.class) {
 			return null;
 		}
-	Class<?> tt=	method.getReturnType();
-		//Type objectType = new TypeToken<tt>() {}.getType(); 
+		Class<?> tt = method.getReturnType();
+		// Type objectType = new TypeToken<tt>() {}.getType();
 		return gson.fromJson(result.toString(), tt);
 	}
 
-	private String c(String handleName, JsonRpcClientTransport transport,
-			Method method, Object[] args, String key, Gson gson) {
+	private String c(String handleName, JsonRpcClientTransport transport, Method method, Object[] args, String key,
+			Gson gson) {
 		String responseData = null;
 		int id = rand.nextInt(Integer.MAX_VALUE);
 		String methodName = handleName + "." + method.getName();
