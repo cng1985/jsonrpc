@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import com.openyelp.client.JsonRpcClientTransport;
-import com.openyelp.commons.JsonRpcClientException;
+import com.quhaodian.client.JsonRpcClientTransport;
+import com.quhaodian.commons.JsonRpcClientException;
 
 public class HttpJsonRpcClientTransportOld   implements JsonRpcClientTransport{
 	   private URL url;
