@@ -25,6 +25,11 @@ public abstract class RpcServlet extends HttpServlet {
 		executor = bind();
 	}
 
+	/**
+	 * 获取spring的上下文
+	 * 
+	 * @return
+	 */
 	public abstract ApplicationContext getApplicationContext();
 
 	private JsonRpcExecutor bind() {

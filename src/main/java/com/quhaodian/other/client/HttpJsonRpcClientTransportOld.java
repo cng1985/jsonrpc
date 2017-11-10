@@ -1,4 +1,4 @@
-package org.json.other.client;
+package com.quhaodian.other.client;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
