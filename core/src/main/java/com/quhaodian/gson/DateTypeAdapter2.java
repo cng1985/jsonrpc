@@ -72,7 +72,7 @@ public class DateTypeAdapter2 extends TypeAdapter<Date> {
 			// return null;
 		}
 		try {
-			java.text.SimpleDateFormat sdf = new SimpleDateFormat(
+			SimpleDateFormat sdf = new SimpleDateFormat(
 					"MMM dd, yyyy HH:mm:ss", Locale.US);
 			return sdf.parse(json);
 		} catch (ParseException e) {

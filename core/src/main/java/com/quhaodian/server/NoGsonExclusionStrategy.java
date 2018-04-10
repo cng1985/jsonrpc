@@ -2,7 +2,7 @@ package com.quhaodian.server;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
-import com.quhaodian.annotation.NoGson;
+import com.quhaodian.jsonrpc.annotation.NoGson;
 
 public class NoGsonExclusionStrategy implements ExclusionStrategy {
 

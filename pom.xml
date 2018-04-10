@@ -2,13 +2,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.quhaodian</groupId>
-	<artifactId>jsonrpc</artifactId>
-	<version>1.06</version>
-	<packaging>jar</packaging>
+	<groupId>com.quhaodian.jsonrpc</groupId>
+	<artifactId>jsonrpc-root</artifactId>
+	<version>1.01</version>
+	<modules>
+		<module>annotation</module>
+		<module>core</module>
+	</modules>
+	<packaging>pom</packaging>
 
 	<name>jsonrpc</name>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/cng1985/jsonrpc</url>
 	<description>jsonrpc is a lightweight Rpc Framework</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,32 +24,6 @@
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>4.1.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.18</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.18</version>
 		</dependency>
 	</dependencies>
 	<licenses>
@@ -61,9 +39,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<url>git@git.oschina.net:cng1985/jsonrpc.git</url>
-		<connection>git@git.oschina.net:cng1985/jsonrpc.git</connection>
-		<developerConnection>git@git.oschina.net:cng1985/jsonrpc.git</developerConnection>
+		<url>https://github.com/cng1985/jsonrpc</url>
+		<connection>git@github.com:cng1985/jsonrpc.git</connection>
+		<developerConnection>git@github.com:cng1985/jsonrpc.git</developerConnection>
 	</scm>
 	<profiles>
 		<profile>

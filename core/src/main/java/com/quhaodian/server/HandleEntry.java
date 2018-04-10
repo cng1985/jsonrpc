@@ -90,11 +90,11 @@ public class  HandleEntry<T> {
             return handler;
         }
 
-        public java.util.Map<String, String[]> getSignatures() {
+        public Map<String, String[]> getSignatures() {
             return signatures;
         }
 
-        public java.util.Set<java.lang.reflect.Method> getMethods() {
+        public Set<Method> getMethods() {
             return methods;
         }
     }

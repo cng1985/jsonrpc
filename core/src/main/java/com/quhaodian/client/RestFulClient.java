@@ -1,8 +1,9 @@
 package com.quhaodian.client;
 
+import com.quhaodian.jsonrpc.annotation.RestFul;
+
 import java.net.URL;
 
-import com.quhaodian.annotation.RestFul;
 
 public class RestFulClient {
 
