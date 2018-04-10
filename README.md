@@ -8,11 +8,12 @@ jsonrpc
 #maven使用#
 
 
-    <dependency>
-    <groupId>com.openyelp</groupId>
-    <artifactId>jsonrpc</artifactId>
-    <version>1.02</version>
-    </dependency>
+        <dependency>
+            <groupId>com.quhaodian</groupId>
+            <artifactId>jsonrpc</artifactId>
+            <version>1.06</version>
+        </dependency>
+
 ## 使用方法 ##
 1. 定义接口
 
