@@ -61,11 +61,13 @@
 
    
     	   
-    	   url="远程服务端servlet地址"
+    	   String url="远程服务端servlet地址"
     
     	   Calculator  s = RestFulClient.getService(url, Calculator .class);
     
            double result = calc.add(1.2, 7.5);
+           
+           
 	   
 
 
