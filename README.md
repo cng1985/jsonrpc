@@ -47,7 +47,7 @@
 	    
 	    }
 
-3. 通过与spring集成，编写servlet。
+3. 通过与spring集成，配置servlet。
     
         <servlet>
             <servlet-name>rpc</servlet-name>
