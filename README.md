@@ -23,14 +23,12 @@
 ## 使用方法 ##
 1. 定义接口
 
-    	 	
-	    @RestFul(api=Calculator.class,value="calculator")
-	    public interface Calculator {
-            double add(double x, double y);
-            double multiply(double x, double y);
-	
-	    }
-    
+            @RestFul(api=Calculator.class,value="calculator")
+            public interface Calculator {
+                double add(double x, double y);
+                double multiply(double x, double y);
+            }
+        
 
 
 2. 实现接口
