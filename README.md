@@ -47,11 +47,31 @@
 
 3. 通过与spring集成，配置servlet。
     
+        <context-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:context.xml</param-value>
+        </context-param>
+        
+        <listener>
+            <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        </listener>
+        
+        <servlet>
+            <servlet-name>dispatcher</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <init-param>
+                <param-name>contextConfigLocation</param-name>
+                <param-value></param-value>
+            </init-param>
+            <load-on-startup>1</load-on-startup>
+        </servlet> 
+          
         <servlet>
             <servlet-name>rpc</servlet-name>
             <servlet-class>com.quhaodian.servlet.RpcServlet</servlet-class>
             <load-on-startup>2</load-on-startup>
         </servlet>
+        
         <servlet-mapping>
              <servlet-name>rpc</servlet-name>
              <url-pattern>/rpc</url-pattern>
